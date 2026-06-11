@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Biomedical CoT Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <!-- Your global stylesheet still loads -->
+  <link rel="stylesheet" href="/assets/app.css" />
+
+  <style>
+    :root{
+      --bg:#0b1020; --card:#111832; --ink:#e9eefb; --muted:#a9b4d0; --ring:#1f2a4d;
+      --ok:#1dbf73; --bad:#f05053; --neu:#e3b341; --accent:#5b8cff; --code:#0e1430;
+      --elev: 0 10px 30px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    .wrap{max-width:1280px;margin:28px auto;padding:0 18px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .brand{font-weight:800;letter-spacing:.3px;white-space:nowrap}
+    .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    select,input[type="text"]{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--ring);background:#0f1731;color:var(--ink)
+    }
+    input[type="text"]{width:480px;max-width:60vw}
+    button{
+      padding:10px 14px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer;
+      box-shadow: 0 6px 16px rgba(91,140,255,.25); transition:.15s ease-in-out
+    }
+    button:hover{filter:brightness(1.06) saturate(1.05); transform:translateY(-1px)}
+    .btn-secondary{background:#0f1731;border:1px solid var(--ring);color:#cfe0ff;box-shadow:none}
+    .btn-danger{background:var(--bad)}
+
+    /* Topbar */
+    .topbar{
+      background:linear-gradient(90deg, rgba(91,140,255,.15), transparent);
+      border:1px solid var(--ring); border-radius:18px; padding:14px; margin-bottom:16px;
+      display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between
+    }
+    .topbar .left{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .toggles{display:flex;gap:14px;align-items:center;color:var(--muted);font-size:13px;flex-wrap:wrap}
+    .downloads{display:flex;gap:10px;flex-wrap:wrap}
+    a.download{color:#cfe0ff;text-decoration:none;font-weight:700;border:1px solid var(--ring);padding:9px 12px;border-radius:12px;background:#0f1731}
+    a.download:hover{background:#16224a}
+
+    /* Layout */
+    .grid{display:grid;grid-template-columns:1fr;gap:18px}
+    @media (min-width:1100px){ .grid{grid-template-columns:minmax(0,1fr) 340px;align-items:start} }
+
+    /* Cards */
+    .question,.step,.card{
+      background:var(--card);border:1px solid var(--ring);border-radius:18px;box-shadow:var(--elev)
+    }
+    .question{padding:14px 16px}
+    .step{padding:18px 20px}
+    .card{padding:18px 18px}
+    /* extra comfy padding for Settings & Coverage as requested */
+    .card--comfy{padding:22px 22px}
+
+    /* Legend */
+    .legend{display:flex;gap:10px;align-items:center;color:var(--muted);margin:12px 0 18px;flex-wrap:wrap}
+    .pill{display:inline-block;padding:4px 10px;border-radius:999px;font-weight:700;font-size:12px;border:1px solid var(--ring);background:#0f1731}
+    .pill.ok{color:#b7f4cf;border-color:#184e3a;background:#0f2c23}
+    .pill.bad{color:#ffd3d4;border-color:#4a1b1d;background:#2a0f10}
+    .pill.neutral{color:#ffeab8;border-color:#4a3a12;background:#2a210e}
+
+    /* Steps */
+    .step.good{outline:2px solid color-mix(in srgb, var(--ok) 45%, transparent)}
+    .step.bad{outline:2px solid color-mix(in srgb, var(--bad) 45%, transparent)}
+    .step + .step{margin-top:16px}
+    .step-header{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+    .step-title{font-weight:800;letter-spacing:.2px}
+    .badge{padding:3px 10px;border-radius:999px;font-weight:800;font-size:12px;border:1px solid var(--ring);text-transform:capitalize}
+    .badge.entailment{color:#b7f4cf;background:#0f2c23;border-color:#184e3a}
+    .badge.contradiction{color:#ffd3d4;background:#2a0f10;border-color:#4a1b1d}
+    .badge.neutral{color:#ffeab8;background:#2a210e;border-color:#4a3a12}
+    .subtle{color:var(--muted);font-size:12px;margin-left:8px}
+    details.debug{margin-top:12px}
+    details.debug summary{cursor:pointer;color:#b9c6ee;font-weight:600}
+    pre{background:#0f1731;color:#d9e2ff;border:1px solid var(--ring);border-radius:12px;padding:12px;overflow:auto}
+
+    /* Tables */
+    table{width:100%;border-collapse:collapse;margin-top:10px;border:1px solid var(--ring);overflow:hidden;border-radius:12px}
+    thead th{text-align:left;font-size:12px;color:var(--muted);background:#0e1630;padding:10px;border-bottom:1px solid var(--ring);position:sticky;top:0}
+    tbody td{padding:10px;border-bottom:1px solid var(--ring);vertical-align:top}
+    tbody tr:nth-child(odd){background:#101939}
+    tbody tr:nth-child(even){background:#0f1734}
+    code{background:#0f1731;padding:2px 6px;border-radius:6px;border:1px solid var(--ring)}
+
+    .valid-yes{color:#b7f4cf;background:#0f2c23;border:1px solid #184e3a;padding:2px 8px;border-radius:999px}
+    .valid-no{color:#ffd3d4;background:#2a0f10;border:1px solid #4a1b1d;padding:2px 8px;border-radius:999px}
+
+    .hidden{display:none!important}
+
+    /* Coverage widget */
+    .coverage-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .badge-soft{padding:4px 10px;border-radius:999px;border:1px solid var(--ring);background:#0f1731;color:#cfe0ff;font-weight:700;font-size:12px}
+    .progress{height:12px;border-radius:999px;background:#0e1630;border:1px solid var(--ring);overflow:hidden}
+    .progress-bar{height:100%;width:0%;background:linear-gradient(90deg, rgba(29,191,115,.85), rgba(91,140,255,.85));transition:width .4s ease}
+    .coverage-nums{display:flex;gap:10px;color:var(--muted);font-size:13px;margin-top:8px}
+    .coverage-note{margin-top:8px;color:var(--muted);font-size:12px}
+
+    /* Loader overlay (kept for /assets/app.js) */
+    #loading-overlay{position:fixed;inset:0;background:rgba(5,10,20,.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:9999}
+    #loading-overlay.active{display:flex}
+    .loading-spinner{width:46px;height:46px;border-radius:50%;border:4px solid rgba(255,255,255,.15);border-top-color:#fff;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">Biomedical CoT Analyzer</div>
+      <div class="controls">
+        <select id="reportSelect" title="Open saved report">
+          <option value="">Open saved report…</option>
+        </select>
+        <button id="deleteReportBtn" class="btn-danger" style="display:none;">Delete</button>
+      </div>
+    </header>
+
+    <div class="topbar">
+      <div class="left">
+        <!-- IDs preserved for /assets/app.js -->
+        <form id="ask-form" onsubmit="return false;" style="display:flex;gap:10px;align-items:center;">
+          <input type="text" id="question" placeholder="Ask a biomedical question…" value="{{ question }}" required>
+          <button type="submit">Run</button>
+        </form>
+        <div class="toggles">
+          <label><input id="toggleFlags" type="checkbox"> Show only flags</label>
+          <label><input id="toggleConcepts" type="checkbox"> Show concept tables</label>
+        </div>
+      </div>
+      <div class="downloads">
+        {% if report_file %}
+          <a class="download" href="/reports/data/{{ report_file|replace('.html','.json') }}">Download JSON</a>
+          <a class="download" href="/reports/data/{{ report_file|replace('.html','.csv') }}">Download CSV</a>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if question %}
+      <div class="question">
+        <strong>Question</strong><br>{{ question }}
+      </div>
+
+      <div class="legend">
+        <span class="pill ok">Entailment</span>
+        <span class="pill bad">Contradiction</span>
+        <span class="pill neutral">Neutral</span>
+        <span class="subtle">Hybrid: NLI with ontology & triple guards</span>
+      </div>
+
+      <div class="grid">
+        <main>
+          {% set ent_map = namespace(data={}) %}
+          {% for e in entailments if e.step_pair is defined %}
+            {% set _ = ent_map.data.update({ (e['step_pair'][0], e['step_pair'][1]) : e }) %}
+          {% endfor %}
+
+          {% for step in steps %}
+            {% set i = loop.index0 %}
+            {% set ent = ent_map.data.get((i, i + 1)) %}
+            {% set label = ent['final_label'] if ent and 'final_label' in ent else (ent['label'] if ent else '') %}
+            {% set cls = 'good' if label == 'entailment' else ('bad' if label == 'contradiction' else '') %}
+
+            <div class="step {{ cls }}" data-label="{{ label|default('') }}">
+              <div class="step-header">
+                <div class="step-title">Step {{ i + 1 }}</div>
+                {% if ent %}
+                  <span class="badge {{ label }}">{{ label }}</span>
+                  {% if ent['reason'] %}<span class="subtle">{{ ent['reason'] }}</span>{% endif %}
+                {% endif %}
+              </div>
+              <div>{{ step }}</div>
+
+              {% if umls and umls[i] %}
+                <details class="debug concept-table">
+                  <summary>Concepts (UMLS)</summary>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Text</th><th>CUI</th><th>Canonical</th><th>Types</th><th>KB Sources</th><th>Valid</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for c in umls[i] %}
+                        {% set types = (c.semantic_types | map(attribute='name') | join(', ')) if c.semantic_types and c.semantic_types[0] is mapping else (c.semantic_types | join(', ') if c.semantic_types else '') %}
+                        {% set srcs = (c.kb_sources | join(', ')) if c.kb_sources else '' %}
+                        <tr title="{{ types }}">
+                          <td>{{ c.text }}</td>
+                          <td>{% if c.cui %}<code>{{ c.cui }}</code>{% else %}—{% endif %}</td>
+                          <td>{{ c.canonical or '' }}</td>
+                          <td>{{ types }}</td>
+                          <td>{{ srcs }}</td>
+                          <td>{% if c.valid %}<span class="valid-yes">yes</span>{% else %}<span class="valid-no">no</span>{% endif %}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </details>
+              {% endif %}
+
+              {% if ent %}
+                <details class="debug">
+                  <summary>Debug</summary>
+                  <table>
+                    <thead><tr><th>Field</th><th>Value</th></tr></thead>
+                    <tbody>
+                      <tr><td>Model label</td><td>{{ ent['label'] }}</td></tr>
+                      <tr><td>Final label</td><td>{{ ent['final_label'] }}</td></tr>
+                      <tr><td>Entailment prob</td><td>{{ (ent['probs']['entailment'] * 100) | round(2) if ent['probs'] and 'entailment' in ent['probs'] else '—' }}%</td></tr>
+                      <tr><td>Neutral prob</td><td>{{ (ent['probs']['neutral'] * 100) | round(2) if ent['probs'] and 'neutral' in ent['probs'] else '—' }}%</td></tr>
+                      <tr><td>Contradiction prob</td><td>{{ (ent['probs']['contradiction'] * 100) | round(2) if ent['probs'] and 'contradiction' in ent['probs'] else '—' }}%</td></tr>
+                      {% if ent['votes'] %}
+                        <tr><td>Votes</td><td>
+                          <ul>
+                            {% for v in ent['votes'] %}
+                              <li>{{ v['label'] }} (C {{ (v['probs']['contradiction'] * 100) | round(2) }}%, E {{ (v['probs']['entailment'] * 100) | round(2) }}%)</li>
+                            {% endfor %}
+                          </ul>
+                        </td></tr>
+                      {% endif %}
+                    </tbody>
+                  </table>
+                </details>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+          <footer style="margin-top:18px;color:var(--muted);font-size:12px;">Generated {{ generated_at }}</footer>
+        </main>
+
+        <aside class="side" style="display:flex;flex-direction:column;gap:18px">
+          <div class="card card--comfy">
+            <h3 style="margin:0 0 15px 0;font-size:14px;color:#cfe0ff;letter-spacing:.2px;">Settings</h3>
+            <table>
+              <tbody>
+                <tr><td style="color:var(--muted);width:50%">NLI model</td><td><code>{{ settings.nli_model }}</code></td></tr>
+                <tr><td style="color:var(--muted);">NLI temp</td><td>{{ settings.nli_temp if settings and settings.nli_temp is defined else '—' }}</td></tr>
+                <tr><td style="color:var(--muted);">Contradiction threshold</td><td>{{ settings.contradiction_threshold if settings and settings.contradiction_threshold is defined else '—' }}</td></tr>
+                <tr><td style="color:var(--muted);">Ontology override</td><td>{{ 'on' if settings.relation_aware_override else 'off' }}</td></tr>
+                <tr><td style="color:var(--muted);">Show flags by default</td><td>{{ 'on' if settings.show_flags_default else 'off' }}</td></tr>
+                <tr><td style="color:var(--muted);">Reranker</td><td>{{ settings.reranker_model if settings and settings.reranker_model is defined else '—' }}</td></tr>
+                <tr><td style="color:var(--muted);">Model<td>{{settings.generator_model}}</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          {% if umls and umls|length %}
+          <div class="card card--comfy" id="coverageCard">
+            <div class="coverage-header">
+              <h3 style="margin:0;font-size:14px;color:#cfe0ff;letter-spacing:.2px;">Concept Coverage</h3>
+              <span id="coverageBadge" class="badge-soft">0%</span>
+            </div>
+            <div class="progress" aria-label="UMLS linking coverage" aria-valuemin="0" aria-valuemax="100">
+              <div id="coverageBar" class="progress-bar" style="width:0%"></div>
+            </div>
+            <div class="coverage-nums">
+              <div id="coverageCount">0/0 linked to UMLS</div>
+            </div>
+            <div class="coverage-note" id="coverageNote">No entities linked yet.</div>
+          </div>
+          {% endif %}
+
+          <div class="card">
+            <h3 style="margin:0 0 10px 0;font-size:14px;color:#cfe0ff;letter-spacing:.2px;">Tips</h3>
+            <ul style="margin:0;padding-left:18px;color:var(--muted);font-size:13px">
+              <li>Use <em>Show only flags</em> to focus on contradictions/neutral transitions.</li>
+              <li>Expand <em>Concepts (UMLS)</em> to see CUIs, types, and sources.</li>
+              <li>Download JSON/CSV for programmatic inspection.</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Loader overlay for /assets/app.js -->
+  <div id="loading-overlay"><div class="loading-spinner"></div></div>
+
+  <script defer src="/assets/app.js"></script>
+  <script>
+    const SHOW_FLAGS_DEFAULT = {{ 'true' if settings and settings.show_flags_default else 'false' }};
+
+    async function loadReports() {
+      try{
+        const res = await fetch("/reports/list");
+        const list = await res.json();
+        const sel = document.getElementById("reportSelect");
+        sel.innerHTML = '<option value="">Open saved report…</option>';
+        for(const r of list){
+          const opt=document.createElement("option");
+          opt.value=r.file; opt.textContent=r.label; sel.appendChild(opt);
+        }
+        return list;
+      }catch(e){ console.warn("Could not load report list", e); return []; }
+    }
+
+    async function deleteReport() {
+      const sel = document.getElementById("reportSelect");
+      const file = sel.value; if(!file) return;
+      if(!confirm("Delete this report?")) return;
+      try{
+        const res = await fetch("/reports/delete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({file})});
+        const data = await res.json();
+        if(data.ok){ alert("Deleted."); await loadReports(); window.location.href="/"; }
+        else { alert("Error: " + JSON.stringify(data)); }
+      }catch(err){ alert("Request failed: " + err); }
+    }
+
+    function applyFlagsOnly(){
+      const flagsOnly = document.getElementById("toggleFlags").checked;
+      document.querySelectorAll(".step").forEach(s=>{
+        const label=(s.getAttribute("data-label")||"").toLowerCase();
+        if(!flagsOnly) s.classList.remove("hidden");
+        else{
+          if(label==="entailment" || label==="") s.classList.add("hidden");
+          else s.classList.remove("hidden");
+        }
+      });
+    }
+
+    function toggleConceptTables(){
+      const show = document.getElementById("toggleConcepts").checked;
+      document.querySelectorAll(".concept-table").forEach(d=>{
+        if(show) d.classList.remove("hidden"); else d.classList.add("hidden");
+      });
+    }
+
+    function computeCoverage(){
+      const bodies = document.querySelectorAll(".concept-table tbody");
+      const bar = document.getElementById("coverageBar");
+      const badge = document.getElementById("coverageBadge");
+      const count = document.getElementById("coverageCount");
+      const note = document.getElementById("coverageNote");
+      if(!bodies.length || !bar || !badge || !count || !note) return;
+
+      let total=0, withCui=0;
+      bodies.forEach(tb=>{
+        tb.querySelectorAll("tr").forEach(tr=>{
+          total += 1;
+          const hasCui = tr.querySelector("td:nth-child(2) code");
+          if(hasCui) withCui += 1;
+        });
+      });
+      const pct = total ? Math.round((withCui/total)*100) : 0;
+
+      // Visuals
+      bar.style.width = pct + "%";
+      count.textContent = `${withCui}/${total} linked to UMLS`;
+      badge.textContent = pct + "%";
+
+      if(total===0){
+        note.textContent = "No entities extracted.";
+      } else if(pct===0){
+        note.textContent = "No concepts linked. Consider enabling the UMLS linker or verifying models.";
+      } else if(pct<40){
+        note.textContent = "Low linking coverage — results may be less reliable for ontology checks.";
+      } else if(pct<80){
+        note.textContent = "Moderate coverage — ontology checks should be informative.";
+      } else{
+        note.textContent = "High coverage — ontology checks are well-grounded.";
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", async ()=>{
+      const deleteBtn=document.getElementById("deleteReportBtn");
+      const sel=document.getElementById("reportSelect");
+
+      await loadReports();
+      const currentReport = location.pathname.startsWith("/reports/") ? decodeURIComponent(location.pathname.split("/").pop()) : null;
+      if(currentReport){ sel.value=currentReport; deleteBtn.style.display="inline-block"; }
+      sel.addEventListener("change", ()=>{ if(sel.value) window.location.href="/reports/"+sel.value; deleteBtn.style.display=sel.value?"inline-block":"none"; });
+      deleteBtn.addEventListener("click", deleteReport);
+
+      const flags=document.getElementById("toggleFlags");
+      flags.checked=SHOW_FLAGS_DEFAULT; flags.addEventListener("change", applyFlagsOnly); applyFlagsOnly();
+
+      const concepts=document.getElementById("toggleConcepts");
+      concepts.checked=false; concepts.addEventListener("change", toggleConceptTables); toggleConceptTables();
+
+      computeCoverage();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+# 1. Drug mechanism vs. outcome
+Explain how statins work in the body, and describe how they prevent heart attacks.
+
+# 2. Disease vs. symptom
+Describe what asthma is and explain what symptoms people with asthma typically experience.
+
+# 3. General vs. specific mechanism
+What are antibiotics and how does penicillin in particular work against bacteria?
+
+# 4. Mechanism vs. limitation
+How does chemotherapy attack cancer cells, and why does it also harm healthy cells?
+
+# 5. Preventive vs. curative framing
+Explain how vaccines help with influenza, and whether they can cure someone who already has the flu.
+
+# 6. Different body systems
+What does insulin do in regulating blood sugar, and does it have any effect on blood pressure?
+
+# 7. Drug vs. lifestyle intervention
+Explain how exercise helps the heart, and how beta-blockers reduce cardiac workload.
+
+# 8. Orthogonal drug effects
+What are the main effects of aspirin in the body, both for fever and for blood clot prevention?
+
+# 9. Symptom vs. disease cause
+Explain how ibuprofen helps when someone has an infection, and whether it can cure the infection itself.
+
+# 10. Risk vs. mechanism
+Why does diabetes increase cardiovascular disease risk, and how does high blood sugar damage blood vessels?
