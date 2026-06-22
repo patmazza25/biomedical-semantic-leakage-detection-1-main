@@ -1,74 +1,60 @@
 # SICD Camera-Ready — Run Guide
 
-Goal: regenerate all results on the 20-case corpus, harmonized prompts, fixed oscillation, and the
-temperature ablation {0.4, 0.7, 0.9}. Run the **two `sicd_test.ipynb` notebooks** (the paper's two
-models). The Gemma `SICD_OpenSource_Test.ipynb` is optional/supplementary.
+Regenerate all results on the 20-case corpus with harmonized prompts, fixed oscillation, and the
+temperature ablation {0.4, 0.7, 0.9}. Run the **two model notebooks** (the paper's two models).
 
-## 0. Prerequisites (keys)
-- **OpenRouter API key** — used for both Claude Haiku 4.5 and GPT-4o-mini.
-- **UMLS API key** — a UTS account key (https://uts.nlm.nih.gov/uts/signup-login), used for concept
-  extraction. Required; without it concept extraction returns nothing.
-- (Gemma only) a **Hugging Face token** + a Colab **A100** runtime, and a real Gemma model id.
+## Folders & notebooks (renamed for clarity)
+- `SICD Haiku Version/sicd_haiku.ipynb`        → Claude Haiku 4.5  (primary)
+- `SICD GPT-4o-mini Version/sicd_gpt4omini.ipynb` → GPT-4o-mini  (generalization)
+- `sicd_gemma.ipynb` (in either folder)        → local Gemma  (supplementary; not in the paper)
 
-## 1. Open in Colab
-These notebooks expect Colab (the setup cell scans `/content`). For each run:
-1. Upload the whole folder to Colab (or mount Drive) so `sicd_cases.py`, `sicd_scorers.py`, and
-   `utils/` sit next to the notebook.
-2. Open the notebook (e.g. `SICD Haiku Version/sicd_test.ipynb`).
+## 0. Keys you'll need
+- **OpenRouter API key** (both Haiku + GPT-4o-mini).
+- **UMLS/UTS API key** (concept extraction). Sign up: https://uts.nlm.nih.gov/uts/signup-login.
+- (Gemma only) Hugging Face token + a Colab A100.
 
-## 2. Put your keys in cell 2
-Replace the `REDACTED` placeholders:
-```python
-os.environ['OPENROUTER_API_KEY'] = '...'   # your key
-os.environ['UMLS_API_KEY']       = '...'   # your UTS key
-```
-Run cells 0–3. Cell 3 prints `UMLS configured: True` — confirm that before continuing.
+You no longer paste keys into the notebook — the keys cell **prompts you** (hidden input) when you run it.
 
-## 3. (Recommended) Smoke test first
-Before the full ablation, sanity-check the pipeline cheaply:
-- In cell 5, temporarily set `TEMPS = [0.7]`.
-- Optionally shrink the corpus for the test: after cell 4, run `CASES = CASES[:2]` in a scratch cell.
-- Run cells 5–7. Confirm generation works, `UMLS configured: True`, and cell 7 prints a Spearman
-  table with non-NaN values (and Oscillation is no longer all 0.000).
-- Then restore `TEMPS = [0.4, 0.7, 0.9]` and the full `CASES` and do the real run.
+## Run in Colab (recommended)
+1. **Zip the folder** on your PC (e.g. right-click `SICD Haiku Version` → Send to → Compressed folder).
+   Zip your **current edited** folder so Colab gets the 20 cases + fixes.
+2. In Colab: **File → Upload notebook** → pick the notebook from that folder
+   (`sicd_haiku.ipynb` or `sicd_gpt4omini.ipynb`).
+3. Run the **first code cell** ("fetch experiment files"). It shows a **Choose Files** button →
+   pick your **zip** → it extracts `sicd_cases.py`, `sicd_scorers.py`, `utils/`.
+   (This cell auto-skips if the files are already present.)
+4. Run the **setup cell** → it prints `Environment configured…`.
+5. Run the **keys cell** → paste your `OPENROUTER_API_KEY`, then `UMLS_API_KEY` at the prompts.
+   The imports cell should then print `UMLS configured: True`.
+6. **Runtime → Run all.** Generation prints a live counter, e.g. `[T=0.4] 7/80  STEMI [hard_interference] -> 9 steps`.
 
-## 4. Run the Claude Haiku 4.5 notebook (primary)
-- File: `SICD Haiku Version/sicd_test.ipynb`. Run all cells top to bottom.
-- Generation: 20 cases × 4 levels × 3 temps = **240 chains** (cached per temperature in
-  `data/sicd_cache_haiku_t04|t07|t09.json` — reruns skip what's cached).
-- Concept extraction is the slow part (UMLS REST). Let it finish in one sitting (extraction results
-  are held in memory, not on disk — if the kernel dies mid-extraction you re-extract, though
-  generation stays cached).
-- Outputs (in `data/`): `sicd_ablation_haiku.csv`, `sicd_trajectories_haiku.png`,
-  `sicd_sdr_ablation_haiku.png`, plus the printed per-temp Spearman tables and the per-case SDR table.
+Generation = 20 cases × 4 levels × 3 temps = **240 chains** per model (cached per temperature in
+`data/sicd_cache_<model>_t04|t07|t09.json`; reruns skip cached temps). UMLS extraction is the slow
+part — let it finish in one sitting.
 
-## 5. Run the GPT-4o-mini notebook (generalization)
-- File: `SICD_Test/sicd_test.ipynb`. Same steps as above.
-- Outputs: `data/sicd_ablation_gpt4omini.csv`, `sicd_trajectories_gpt4omini.png`,
-  `sicd_sdr_ablation_gpt4omini.png`, + printed tables.
+## Run in VSCode (local) instead
+Works too (no GPU needed for the two API notebooks). Open the repo folder, pick a Python 3 kernel,
+`pip install requests openai python-dotenv numpy scipy matplotlib pandas`. The fetch + setup cells
+auto-skip locally because the files are already on disk; just make sure the notebook's working
+directory is its own folder (so `import sicd_cases` resolves).
 
-## 6. (Optional) Gemma — supplementary
-- File: either `SICD_OpenSource_Test.ipynb`. Needs an **A100** + HF token.
-- **First replace the model id** `google/gemma-4-31B-it` (cell 5 `MODEL` and the cell-4 warmup) with a
-  real Gemma id, e.g. a current `google/gemma-*-it` release.
-- Outputs: `data/sicd_ablation_gemma.csv` + figures.
+## (Optional) Gemma
+Open `sicd_gemma.ipynb`, needs an A100 + HF token, and **first replace** the placeholder model id
+`google/gemma-4-31B-it` (cell 5 `MODEL` + the warmup cell) with a real Gemma id.
 
-## 7. What to send back
+## What to send back (per model)
 From each run's `data/` folder:
-- `sicd_ablation_haiku.csv` and `sicd_ablation_gpt4omini.csv` (the core numbers for Table 1).
-- The console output of **cell 7** for each notebook (per-temp Spearman tables, the SDR-by-temperature
-  block, and the per-case SDR table).
-- The figures: `sicd_trajectories_*.png` and `sicd_sdr_ablation_*.png`.
-- (Optional, if anything looks off) the per-temp cache files `sicd_cache_*_t*.json`.
+- `sicd_ablation_haiku.csv` and `sicd_ablation_gpt4omini.csv` (the Table 1 numbers).
+- The **evaluation cell** console output (per-temp Spearman tables + SDR-by-temperature + per-case SDR).
+- Figures: `sicd_trajectories_*.png`, `sicd_sdr_ablation_*.png`.
 
 I'll then fill the `«FILL FROM RERUN»` placeholders in `CAMERA_READY_EDITS.md`, finalize Table 1 and
-the abstract numbers, and tell you whether the corrected oscillation separates surrender vs. resistance.
+the abstract numbers, and report whether the corrected oscillation separates surrender vs. resistance.
 
 ## Troubleshooting
-- `UMLS configured: False` → key not set or invalid; re-check cell 2.
-- Extraction very slow / intermittent empty concepts → UMLS rate-limiting; rerun, or run one
-  temperature at a time by editing `TEMPS`.
-- Spearman shows `nan` for a signal → that signal was constant across chains (can happen for a weak
-  signal on a small set); not an error.
-- Want it cheaper/faster → reduce `TEMPS` (e.g. just `[0.7]`); you still get the headline run, just no
-  ablation columns.
+- `UMLS configured: False` → re-run the keys cell and enter the UMLS key.
+- Generation looks stuck → watch the `N/total` counter; each chain is one API call.
+- Extraction slow / occasional empty concepts → UMLS rate-limiting; rerun, or run one temperature at a
+  time by editing `TEMPS` in the generation cell.
+- Spearman `nan` for a signal → that signal was constant across chains; not an error.
+- Cheaper/faster → set `TEMPS = [0.7]` (headline run only, no ablation columns).

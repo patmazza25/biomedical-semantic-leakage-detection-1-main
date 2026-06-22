@@ -4,6 +4,12 @@ This file documents the camera-ready revision. Part 1 is what changed in the cod
 Part 2 is drafted manuscript text to paste into the LaTeX source (no `.tex` is in this repo).
 All numbers that depend on re-running are marked **«FILL FROM RERUN»**.
 
+> **File names (renamed for clarity):** `SICD_Test/` → `SICD GPT-4o-mini Version/`. Notebooks are now
+> `sicd_haiku.ipynb`, `sicd_gpt4omini.ipynb`, and `sicd_gemma.ipynb` (formerly `sicd_test.ipynb` /
+> `SICD_OpenSource_Test.ipynb`). Keys are entered via a getpass prompt; generation prints an
+> `N/total` progress counter; a Colab auto-fetch cell handles uploading the support files. Wherever
+> this doc says `sicd_test.ipynb` / `SICD_Test`, read the new names.
+
 ---
 
 ## Part 1 — Code & repo changes (done)
