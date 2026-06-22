@@ -205,6 +205,219 @@ CASES: List[Dict] = [
             "and arterial line placed. Urine culture grows E. coli (ESBL-producing)."
         )
     },
+    {
+        "id": "case_11", "title": "Acute Ischemic Stroke (LVO)",
+        "domain": "neurological",
+        "interference_domain": "dermatological",
+        "interference_disease": "Atopic Dermatitis",
+        "full_text": (
+            "A 72-year-old man with atrial fibrillation not on anticoagulation "
+            "presents with sudden-onset right-sided hemiparesis, global aphasia, "
+            "and left gaze deviation; last known well 90 minutes ago. NIHSS 18. "
+            "Vitals: BP 178/96 mmHg, HR 104 bpm irregularly irregular, glucose "
+            "132 mg/dL, SpO2 96%. Non-contrast head CT: no hemorrhage, hyperdense "
+            "left MCA sign, ASPECTS 8. CT angiography: left M1 middle cerebral "
+            "artery occlusion. CT perfusion: ischemic core 18 mL, penumbra 95 mL "
+            "(mismatch ratio greater than 5). IV tenecteplase 0.25 mg/kg given at "
+            "110 minutes from onset. Taken for mechanical thrombectomy; TICI 2b "
+            "recanalization at 200 minutes. Post-procedure NIHSS 6. Admitted to "
+            "neuro-ICU with permissive hypertension, BP goal below 180/105 mmHg. "
+            "Repeat CT at 24 hours: small left basal ganglia infarct without "
+            "hemorrhagic transformation. Apixaban started on day 3 for "
+            "cardioembolic secondary prevention. Dysphagia screen before oral intake."
+        )
+    },
+    {
+        "id": "case_12", "title": "Tension Pneumothorax",
+        "domain": "pulmonary",
+        "interference_domain": "renal",
+        "interference_disease": "Nephrolithiasis",
+        "full_text": (
+            "A 25-year-old tall, thin man presents with sudden severe right-sided "
+            "pleuritic chest pain and dyspnea after weightlifting. Vitals: HR 132 "
+            "bpm, BP 88/54 mmHg, RR 34, SpO2 84% on room air. Exam: tracheal "
+            "deviation to the left, absent breath sounds and hyperresonance over "
+            "the right hemithorax, and distended neck veins, with rapidly "
+            "worsening hemodynamics. Immediate needle decompression at the right "
+            "second intercostal space, midclavicular line, releases a rush of air; "
+            "BP improves to 112/70 mmHg and SpO2 to 94%. A chest tube is placed in "
+            "the right fifth intercostal space, anterior axillary line; chest "
+            "radiograph confirms right lung re-expansion with resolution of "
+            "mediastinal shift. No rib fractures. CT chest shows apical blebs "
+            "consistent with primary spontaneous pneumothorax. Admitted for "
+            "chest-tube management on water-seal drainage; thoracic surgery "
+            "consulted for pleurodesis given the high recurrence risk."
+        )
+    },
+    {
+        "id": "case_13", "title": "Variceal Upper GI Hemorrhage",
+        "domain": "gastrointestinal",
+        "interference_domain": "neurological",
+        "interference_disease": "Migraine",
+        "full_text": (
+            "A 56-year-old man with alcohol-related cirrhosis presents with "
+            "hematemesis and melena. Vitals: HR 118 bpm, BP 92/58 mmHg, RR 20, "
+            "with orthostatic changes. Exam: pallor, spider angiomata, "
+            "splenomegaly, and mild ascites. Labs: Hb 7.2 g/dL (baseline 12), "
+            "platelets 78,000/uL, INR 1.6, total bilirubin 3.1 mg/dL, albumin "
+            "2.8 g/dL, BUN 42 mg/dL. Resuscitated through two large-bore IVs with "
+            "a restrictive transfusion target of 7-8 g/dL. Octreotide 50 mcg IV "
+            "bolus then 50 mcg/hr infusion, IV ceftriaxone 1 g daily for "
+            "prophylaxis, and IV pantoprazole started. Urgent EGD within 12 hours "
+            "reveals large esophageal varices with active spurting; endoscopic "
+            "band ligation achieves hemostasis. Child-Pugh class C, MELD 19. "
+            "Admitted to the ICU; a non-selective beta-blocker for secondary "
+            "prophylaxis is deferred until hemodynamically stable."
+        )
+    },
+    {
+        "id": "case_14", "title": "Thyroid Storm",
+        "domain": "endocrine",
+        "interference_domain": "musculoskeletal",
+        "interference_disease": "Osteoarthritis",
+        "full_text": (
+            "A 41-year-old woman with poorly controlled Graves disease presents "
+            "with fever, agitation, and palpitations two days after an upper "
+            "respiratory infection. Vitals: T 40.1 C, HR 168 bpm (atrial "
+            "fibrillation with rapid ventricular response), BP 158/64 mmHg, RR 26. "
+            "Exam: diaphoresis, lid lag, a diffuse goiter with bruit, fine tremor, "
+            "and confusion. Burch-Wartofsky score 75 (highly suggestive of thyroid "
+            "storm). Labs: TSH less than 0.01 mIU/L, free T4 6.8 ng/dL, markedly "
+            "elevated free T3, mild transaminitis, glucose 184 mg/dL. Management: "
+            "propranolol 60-80 mg PO q4h for adrenergic control, propylthiouracil "
+            "500-1000 mg load then 250 mg q4h, with iodine (SSKI) begun one hour "
+            "after PTU to block hormone release, plus hydrocortisone 100 mg IV q8h "
+            "and active cooling with acetaminophen. The precipitating infection is "
+            "treated. Admitted to the ICU on telemetry; rate and temperature "
+            "improve over 24 hours."
+        )
+    },
+    {
+        "id": "case_15", "title": "Cardiogenic Shock",
+        "domain": "cardiac",
+        "interference_domain": "gastrointestinal",
+        "interference_disease": "Irritable Bowel Syndrome",
+        "full_text": (
+            "A 67-year-old man with ischemic cardiomyopathy (EF 20%) presents with "
+            "progressive dyspnea, orthopnea, and cool extremities. Vitals: HR 112 "
+            "bpm, BP 82/60 mmHg, RR 28, SpO2 89% on room air. Exam: elevated JVP, "
+            "bilateral crackles, an S3 gallop, and cool, clammy, mottled skin. "
+            "Labs: lactate 3.8 mmol/L, creatinine 1.9 mg/dL (baseline 1.1), "
+            "NT-proBNP 9,400 pg/mL, and mildly elevated troponin. Bedside echo "
+            "shows severely reduced LV systolic function without tamponade. "
+            "Pulmonary artery catheter: cardiac index 1.6 L/min/m2 with elevated "
+            "wedge pressure, consistent with cardiogenic shock (SCAI stage C). "
+            "Management: IV furosemide for congestion, dobutamine for inotropic "
+            "support, and norepinephrine for MAP below 65 mmHg. Cardiology "
+            "evaluates for temporary mechanical circulatory support and advanced "
+            "heart-failure therapies. Admitted to the CICU with arterial and "
+            "central venous access."
+        )
+    },
+    {
+        "id": "case_16", "title": "Acute Hemolytic Transfusion Reaction",
+        "domain": "hematological",
+        "interference_domain": "psychiatric",
+        "interference_disease": "Generalized Anxiety Disorder",
+        "full_text": (
+            "A 60-year-old woman receiving a packed red blood cell transfusion for "
+            "symptomatic anemia develops fever, chills, flank pain, and burning at "
+            "the infusion site 15 minutes into the transfusion. Vitals: T 39.0 C, "
+            "HR 122 bpm, BP 86/50 mmHg, RR 24. The transfusion is stopped "
+            "immediately and the line kept open with normal saline. Exam: dark, "
+            "cola-colored urine and diffuse oozing from the IV site. Labs: falling "
+            "hemoglobin, markedly elevated LDH, undetectable haptoglobin, elevated "
+            "indirect bilirubin, and high plasma free hemoglobin; the direct "
+            "antiglobulin (Coombs) test is positive and repeat crossmatch reveals "
+            "ABO incompatibility from a clerical mismatch. DIC panel: low "
+            "fibrinogen, elevated D-dimer, and prolonged PT/PTT. Management: "
+            "aggressive IV crystalloid to maintain urine output above 1 mL/kg/hr, "
+            "vasopressors for hypotension, and supportive care for hemolysis and "
+            "DIC. The blood bank is notified and the clerical error investigated. "
+            "Admitted to the ICU to monitor renal function and coagulopathy."
+        )
+    },
+    {
+        "id": "case_17", "title": "Necrotizing Fasciitis",
+        "domain": "infectious",
+        "interference_domain": "endocrine",
+        "interference_disease": "Hypothyroidism",
+        "full_text": (
+            "A 58-year-old man with type 2 diabetes presents with severe left "
+            "lower-extremity pain out of proportion to exam, 24 hours after a "
+            "minor abrasion. Vitals: T 39.2 C, HR 126 bpm, BP 94/58 mmHg, RR 24. "
+            "Exam: tense edema extending beyond a dusky erythematous patch, skin "
+            "bullae, crepitus, and decreased sensation over the calf. Labs: WBC "
+            "26,000/uL, glucose 320 mg/dL, Na 128 mEq/L, creatinine 1.9 mg/dL, "
+            "CRP 280 mg/L, lactate 4.1 mmol/L; LRINEC score 9 (high risk). Plain "
+            "film shows subcutaneous gas. Management: emergent surgical "
+            "exploration with wide debridement for source control, broad-spectrum "
+            "antibiotics (piperacillin-tazobactam plus vancomycin plus clindamycin "
+            "for its antitoxin effect), and aggressive fluid resuscitation. Blood "
+            "and tissue cultures are drawn. Admitted to the ICU with a planned "
+            "second-look debridement in 24 hours."
+        )
+    },
+    {
+        "id": "case_18", "title": "Tumor Lysis Syndrome",
+        "domain": "renal",
+        "interference_domain": "pulmonary",
+        "interference_disease": "Sarcoidosis",
+        "full_text": (
+            "A 34-year-old man with newly diagnosed Burkitt lymphoma develops "
+            "nausea, muscle cramps, and decreased urine output 48 hours after "
+            "initiating chemotherapy. Vitals: HR 104 bpm, BP 142/88 mmHg, RR 18. "
+            "Labs: potassium 6.4 mEq/L, phosphate 7.8 mg/dL, calcium 6.8 mg/dL, "
+            "uric acid 13 mg/dL, creatinine 3.2 mg/dL (baseline 0.9), and markedly "
+            "elevated LDH, meeting Cairo-Bishop criteria for tumor lysis syndrome "
+            "with acute kidney injury. EKG: peaked T waves. Management: continuous "
+            "cardiac monitoring, IV calcium gluconate for membrane stabilization, "
+            "insulin-dextrose and an inhaled beta-agonist for hyperkalemia, "
+            "aggressive isotonic IV fluids, and rasburicase for hyperuricemia. "
+            "Nephrology is consulted for possible renal replacement therapy given "
+            "oliguria and refractory hyperkalemia. Admitted to the ICU."
+        )
+    },
+    {
+        "id": "case_19", "title": "Status Asthmaticus",
+        "domain": "respiratory",
+        "interference_domain": "dermatological",
+        "interference_disease": "Contact Dermatitis",
+        "full_text": (
+            "A 23-year-old woman with asthma presents with severe dyspnea and "
+            "wheezing unresponsive to home albuterol. Vitals: HR 128 bpm, RR 32, "
+            "SpO2 88% on room air; she speaks in single words and uses accessory "
+            "muscles. Exam: diffuse wheezing with a prolonged expiratory phase, "
+            "transiently progressing toward a silent chest. Peak expiratory flow "
+            "is below 40% of predicted. ABG: pH 7.31, pCO2 48 mmHg (a rising pCO2 "
+            "is ominous in a tachypneic asthmatic), pO2 70 mmHg. Management: "
+            "continuous nebulized albuterol with ipratropium, systemic "
+            "corticosteroids (methylprednisolone 125 mg IV), IV magnesium sulfate "
+            "2 g, and supplemental oxygen. Despite therapy, rising pCO2 and "
+            "fatigue prompt a trial of non-invasive ventilation with preparation "
+            "for intubation. Admitted to the ICU for impending respiratory failure."
+        )
+    },
+    {
+        "id": "case_20", "title": "Cauda Equina Syndrome",
+        "domain": "musculoskeletal",
+        "interference_domain": "cardiac",
+        "interference_disease": "Stable Angina",
+        "full_text": (
+            "A 48-year-old man presents with severe low back pain radiating down "
+            "both legs, progressive bilateral leg weakness, urinary retention, and "
+            "saddle anesthesia evolving over 24 hours, with a history of lumbar "
+            "disc disease and recent heavy lifting. Exam: decreased perianal "
+            "sensation, lax anal sphincter tone, bilateral lower-extremity "
+            "weakness (4-/5), and absent ankle reflexes; bladder scan shows 700 mL "
+            "of retained urine with overflow incontinence. Emergent MRI of the "
+            "lumbar spine reveals a large L4-L5 disc herniation with severe "
+            "compression of the cauda equina. Management: urgent neurosurgical "
+            "consultation for surgical decompression within 48 hours to preserve "
+            "neurologic function, a Foley catheter for retention, and high-dose "
+            "analgesia. Admitted for emergent operative planning."
+        )
+    },
 ]
 
 
@@ -243,15 +456,16 @@ def build_prompt(case: Dict, level_label: str) -> str:
         return (
             f"You are a board-certified physician. Analyse the following clinical "
             f"case and provide a step-by-step diagnostic reasoning chain. "
-            f"Consider possible {interf_domain} implications throughout your reasoning.\n\n"
+            f"As you reason, please consider potential implications or differential "
+            f"considerations from the {interf_domain} domain.\n\n"
             f"Case:\n{text}"
         )
     elif level_label == "hard_interference":
         return (
             f"You are a board-certified physician. Analyse the following clinical "
             f"case and provide a step-by-step diagnostic reasoning chain. "
-            f"Your reasoning MUST reference {interf_domain} pathways and mechanisms "
-            f"in every step of your analysis.\n\n"
+            f"You must frame every step of your reasoning through the lens of "
+            f"{interf_domain} pathophysiology and mechanisms.\n\n"
             f"Case:\n{text}"
         )
     elif level_label == "full_dissonance":
@@ -412,59 +626,64 @@ DOMAIN_KEYWORDS: Dict[str, set] = {
     "respiratory": {
         "lung", "pulmonary", "bronch", "alveol", "pneumo", "dyspnea", "ventilat",
         "airway", "oxygen", "hypoxia", "embol", "pleural", "trachea", "spo2",
+        "breathing", "shortness of breath", "cough",
     },
     "endocrine": {
         "thyroid", "insulin", "glucose", "hormone", "pituitary", "adrenal",
         "cortisol", "diabetes", "ketoacid", "hba1c", "tsh", "t3", "t4",
-        "parathyroid", "aldosterone", "pancrea",
+        "parathyroid", "aldosterone", "pancrea", "gland", "sugar level",
     },
     "cardiac": {
         "heart", "cardiac", "coronary", "myocard", "arrhythm", "ecg", "ekg",
         "troponin", "bnp", "ventricular", "atrial", "stent", "pci", "stemi",
-        "hypertens", "bp ", "blood pressure",
+        "hypertens", "bp ", "blood pressure", "chest pain", "pulse",
     },
     "neurological": {
         "brain", "neuro", "seizure", "epilep", "cerebr", "mening", "demyelin",
         "myelin", "axon", "eeg", "gcs", "cognit", "sclerosis", "reflex",
+        "nerve", "paralysis", "numbness",
     },
     "gastrointestinal": {
         "stomach", "intestin", "colon", "bowel", "hepat", "liver", "pancrea",
         "lipase", "amylase", "gi ", "gastric", "crohn", "colitis", "ileum",
+        "digestion", "nausea", "vomit",
     },
     "hepatic": {
         "liver", "hepat", "bilirubin", "alt", "ast", "inr", "coagul",
-        "encephalopathy", "acetaminophen", "cirrhosis", "meld",
+        "encephalopathy", "acetaminophen", "cirrhosis", "meld", "jaundice",
     },
     "infectious": {
         "bacteri", "virus", "infect", "antibiotic", "culture", "gram",
         "sepsis", "septic", "meningit", "ceftriaxone", "vancomycin",
+        "fever", "chills", "contagious",
     },
     "immunological": {
         "immune", "allerg", "anaphyla", "histamine", "ige", "mast cell",
-        "urticaria", "angioedema", "epinephrine", "autoimmun",
+        "urticaria", "angioedema", "epinephrine", "autoimmun", "swelling",
     },
     "musculoskeletal": {
         "joint", "bone", "muscle", "arthrit", "rheumat", "tendon",
-        "cartilage", "synovial", "osteo", "skeletal",
+        "cartilage", "synovial", "osteo", "skeletal", "stiffness",
     },
     "renal": {
         "kidney", "renal", "nephro", "creatinine", "gfr", "dialysis",
-        "urinary", "urine", "proteinuria", "glomerul",
+        "urinary", "urine", "proteinuria", "glomerul", "bladder",
     },
     "hematological": {
         "blood", "hemo", "anemia", "platelet", "coagul", "sickle",
-        "leukocyt", "erythrocyt", "thrombocyt", "hematocrit",
+        "leukocyt", "erythrocyt", "thrombocyt", "hematocrit", "bleeding",
     },
     "dermatological": {
         "skin", "dermat", "rash", "psoriasis", "eczema", "lesion",
-        "epiderm", "keratin", "melanocyt", "pruritus",
+        "epiderm", "keratin", "melanocyt", "pruritus", "itch",
     },
     "psychiatric": {
         "schizo", "psycho", "hallucin", "delusion", "dopamin", "serotonin",
         "antipsychot", "mood", "anxiety", "depress", "bipolar", "mania",
+        "behavior", "mental",
     },
     "pulmonary": {
         "lung", "pulmonary", "fibrosis", "bronch", "alveol", "pneumo",
-        "ventilat", "respiratory", "airway", "oxygen",
+        "ventilat", "respiratory", "airway", "oxygen", "breath",
     },
 }

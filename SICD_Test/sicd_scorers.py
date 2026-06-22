@@ -26,7 +26,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
 
-CONFIDENCE_THRESHOLD = 0.5
+CONFIDENCE_THRESHOLD = 0.3
 
 
 def _valid_high_conf(step_concepts: List[Dict]) -> List[Dict]:
