@@ -51,6 +51,22 @@ Unit-checked: alternating frames → 1.0, single frame → 0.0, neutral-only ste
 Added cases 11–20 (LLM-authored, matching the existing schema and clinical depth). Every target and
 interference domain reuses the existing 14 domain dictionaries. **Pending your clinical sign-off.**
 
+### 6. UMLS backend — local DB for speed + reproducibility (NEW)
+Extraction over the UMLS REST API ran ~17 min/chain (infeasible for ~480 chains). The pipeline now
+prefers a **local UMLS SQLite DB** when present: all three lookups (`search`, `atoms`, `ancestors`)
+route to `utils/umls_local_db.py` → sub-millisecond, offline. Build it once with `build_local_umls.py`
+(repo root, supports `--sabs ALL`) from the licensed UMLS Metathesaurus RRF files; the notebook config
+cell auto-detects `umls_local.db` at the repo root and runs **full-local** (it unsets `UMLS_API_KEY`
+so concept `/search` also uses the DB). Functionally equivalent to the REST API (same Metathesaurus
+data); the local `/search` additionally returns semantic types the REST `/search` omitted, so the
+SDR/oscillation classifier uses them as designed. Big files are git-ignored; generation caches
+(`sicd_cache_*.json`) are untouched (only `sicd_scored_*.json` are recomputed on the DB).
+
+**Manuscript disclosure (add to §3.3 Concept Extraction and §7):** "Concepts were grounded against a
+fixed local UMLS 2026AA Metathesaurus loaded into SQLite (sources: SNOMEDCT_US, MSH, RXNORM, LNC)
+rather than the live REST API, for throughput and reproducibility; this also restores UMLS
+semantic types to the concept records, which the live /search endpoint omits."
+
 ### Not done (per scope): no folder reorganization; no third model; no length/refusal analysis.
 
 ### Supplementary Gemma notebooks brought in line

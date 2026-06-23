@@ -42,6 +42,18 @@ anthropic-claude-3-5-haiku-latest/
 # UMLS local files (large, licensed — do not commit)
 *.rrf
 *.RRF
+# local SQLite DB (repo root or utils/) + SQLite sidecar files
+*.db
+*.db-wal
+*.db-shm
+umls_local.db
+umls_local.db-wal
+umls_local.db-shm
 utils/umls_local.db
 utils/umls_local.db-wal
 utils/umls_local.db-shm
+# Raw UMLS release dirs/zips (multi-GB) — keep OUTSIDE the repo; ignored if dropped in
+umls/
+umls_raw/
+META/
+umls*.zip
