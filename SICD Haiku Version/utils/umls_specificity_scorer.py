@@ -33,7 +33,10 @@ def _cached_atoms_for_cui(apikey: str, version: str, cui: str) -> Tuple[Tuple[st
             if a.get("rootSource") and a.get("code")
         )
     except Exception as e:
-        print(f"  [specificity_err] atoms_for_cui({cui}) failed: {e}")
+        status = getattr(getattr(e, "response", None), "status_code", None)
+        if status in (401, 403):
+            print("  [specificity] UMLS auth error (check UMLS_API_KEY)")
+        # 404 / transient: expected for some CUIs; skip quietly (no key in logs)
         return ()
 
 
@@ -44,7 +47,11 @@ def _cached_ancestor_depth(apikey: str, version: str, source: str, code: str) ->
         ancestors = hierarchy_for_source_code(apikey, version, source, code, "ancestors", max_pages=1)
         return len(ancestors)
     except Exception as e:
-        print(f"  [specificity_err] hierarchy({source}/{code}) failed: {e}")
+        status = getattr(getattr(e, "response", None), "status_code", None)
+        if status in (401, 403):
+            print("  [specificity] UMLS auth error (check UMLS_API_KEY)")
+        # 404 = this source/code has no ancestors hierarchy; expected -> skip quietly
+        # (identical scoring behavior to the original; only the noisy per-miss log is removed)
         return None
 
 

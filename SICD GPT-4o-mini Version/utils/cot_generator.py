@@ -4,7 +4,8 @@ from __future__ import annotations
 import os
 import re
 import json
-import torch
+import time
+import random
 import requests
 from typing import Any, Dict, List, Optional
 
@@ -86,6 +87,7 @@ def _mk_result(
 
 def _call_local_hf(question: str, model_id: str, temperature: float = 0.7) -> Optional[Dict[str, Any]]:
     global _LOCAL_MODEL, _LOCAL_PROCESSOR
+    import torch  # lazy: only the local-HF path needs torch, so API-only runs don't require it
     if _LOCAL_MODEL is None:
         try:
             from transformers import AutoProcessor, AutoModelForCausalLM
@@ -129,19 +131,58 @@ def _call_local_hf(question: str, model_id: str, temperature: float = 0.7) -> Op
         print(f"Local Generation Error: {e}")
         return None
 
-def _call_openrouter(question: str, model: str = "anthropic/claude-haiku-4-5", temperature: float = 0.7) -> Optional[Dict[str, Any]]:
-    if not OPENROUTER_API_KEY: return None
-    try:
-        headers = {"Authorization": f"Bearer {OPENROUTER_API_KEY}", "Content-Type": "application/json"}
-        data = {"model": model, "messages": [{"role": "user", "content": question}], "temperature": temperature}
-        resp = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data, timeout=30)
-        resp.raise_for_status()
-        res = resp.json()
-        text = res["choices"][0]["message"]["content"]
-        return _mk_result(steps=_postprocess_steps(text), provider="openrouter", model=model, raw=res)
-    except Exception as e:
-        print(f"OpenRouter Error: {e}")
+def _call_openrouter(question: str, model: str = "anthropic/claude-haiku-4-5",
+                     temperature: float = 0.7, max_retries: int = 5) -> Optional[Dict[str, Any]]:
+    """Call OpenRouter with retry/backoff on transient errors (429/5xx/timeouts)
+    and on empty completions, so a single blip does not silently become an
+    ERROR chain that gets cached as real data."""
+    if not OPENROUTER_API_KEY:
         return None
+    headers = {"Authorization": f"Bearer {OPENROUTER_API_KEY}", "Content-Type": "application/json"}
+    data = {"model": model, "messages": [{"role": "user", "content": question}], "temperature": temperature}
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    transient = {408, 409, 425, 429, 500, 502, 503, 504}
+
+    def _delay(attempt: int, resp=None) -> float:
+        if resp is not None:
+            ra = resp.headers.get("Retry-After")
+            if ra:
+                try:
+                    return float(ra)
+                except ValueError:
+                    pass
+        return min(2 ** attempt, 30) * (0.5 + random.random())
+
+    for attempt in range(max_retries + 1):
+        try:
+            resp = requests.post(url, headers=headers, json=data, timeout=(10, 90))
+            if resp.status_code in transient:
+                if attempt < max_retries:
+                    d = _delay(attempt, resp)
+                    print(f"OpenRouter {resp.status_code} (attempt {attempt + 1}/{max_retries}); retry in {d:.1f}s")
+                    time.sleep(d); continue
+                resp.raise_for_status()
+            resp.raise_for_status()
+            res = resp.json()
+            text = res["choices"][0]["message"]["content"]
+            steps = _postprocess_steps(text)
+            if not steps:                       # empty completion -> treat as transient
+                if attempt < max_retries:
+                    time.sleep(_delay(attempt)); continue
+                print("OpenRouter Error: empty completion after retries")
+                return None
+            return _mk_result(steps=steps, provider="openrouter", model=model, raw=res)
+        except requests.exceptions.RequestException as e:
+            if attempt < max_retries:
+                d = _delay(attempt)
+                print(f"OpenRouter error: {e} (attempt {attempt + 1}/{max_retries}); retry in {d:.1f}s")
+                time.sleep(d); continue
+            print(f"OpenRouter Error (final): {e}")
+            return None
+        except Exception as e:
+            print(f"OpenRouter unexpected error: {e}")
+            return None
+    return None
 
 # -----------------------------------------------------------------------------
 # Public API
